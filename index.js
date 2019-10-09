@@ -22,7 +22,7 @@ var MainLibrary = new Library("Public library", "Lenina pr. 60");
 MainLibrary.AddBookToLibrary(item);
 console.table(MainLibrary.listOfBooks);
 
-MainLibrary.listOfBooks[0].UpdateBookInfo('name', "Мастер Кот Воланд");
+MainLibrary.listOfBooks[0].UpdateBookInfo("name", "Мастер Кот Воланд");
 console.table(MainLibrary.listOfBooks);
 
 MainLibrary.DeleteBookFromLibrary(item);
