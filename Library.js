@@ -25,7 +25,7 @@ class Library{
     */
     DeleteBookFromLibrary(book){
         var num = this.listOfBooks.indexOf(book);
-        this.listOfBooks.splice(num);
+        this.listOfBooks.splice(num, 1);
     }
 
     /**

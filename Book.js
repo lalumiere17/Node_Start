@@ -5,6 +5,7 @@ class Book{
      * @param {Book} book новая книга 
      */
     constructor(book){
+        this.id = book.id;
         this.name = book.name;
         this.author = book.author;
         this.year = book.year;
