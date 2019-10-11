@@ -1,0 +1,201 @@
+{
+	"info": {
+		"_postman_id": "da589237-5c64-43a9-b8a8-ec9d90b34788",
+		"name": "Library_server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost:3000/books",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"id\": \"0\",\r\n    \"name\": \"Мастер и Маргарита\",\r\n    \"author\": \"М. Булгаков\",\r\n    \"year\": \"2015\",\r\n    \"publisher\": \"Эксмо\",\r\n    \"language\": \"русский\",\r\n    \"pages\": \"352\",\r\n    \"price\": \"1500\",\r\n    \"genre\": \"роман\",\r\n    \"age\": \"16+\"\r\n}"
+				},
+				"url": {
+					"raw": "localhost:3000/books",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/books",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"id\": \"1\",\r\n    \"name\": \"Гарри Поттер и философский камень\",\r\n    \"author\": \"Джю Роулинг\",\r\n    \"year\": \"2015\",\r\n    \"publisher\": \"Росмэн\",\r\n    \"language\": \"русский\",\r\n    \"pages\": \"348\",\r\n    \"price\": \"700\",\r\n    \"genre\": \"фэнтези\",\r\n    \"age\": \"6+\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/books",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/books",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/books",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "0",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/books/1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/books/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"books",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/update_book",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"bookId\" : \"1\",\n\t\"fieldName\" : \"author\",\n\t\"newValue\" : \"Дж. К. Роулинг\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/update_book",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"update_book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/delete_book/1",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/delete_book/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"delete_book",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/delete_lib",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/delete_lib",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"delete_lib"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
