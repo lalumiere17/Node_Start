@@ -1,31 +1,69 @@
 const { Book } = require('./Book');
 const { Library } = require('./Library');
 const express = require("express");
-var bodyParser = require('body-parser');
+let bodyParser = require('body-parser');
+const MongoClient = require("mongodb").MongoClient;
 
-var MainLibrary = new Library("Public library", "Lenina pr. 60");
+let dbClient;
+var url = "mongodb://localhost:27017";
 
+MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
+    if (err) {
+        console.error(err)
+        return
+    }
+    dbClient = client.db('LibraryApp');
+    let library_collection = dbClient.collection('library');
+    let books_collection = dbClient.collection('books_in_lib');
+    
+    library_collection.insertOne(books_collection, (err, resuls) =>{
+        if(err){
+            console.log(err);
+        }
+    });
+    app.locals.library_collection = library_collection;
+    app.locals.books_collection = books_collection;
+
+})
 
 const app = express();
 app.use(bodyParser.json());
 
 
 app.get("/", (request, response) => {
-    var mainInfo = "<h2>Welcome to the library!</h2>\n" + MainLibrary.libName+", " + MainLibrary.libAddress
-    response.send(mainInfo);
+    request.app.locals.library_collection.findOne({libName: 'Public library'}, (err, item) =>{
+        var mainInfo = "<h2>Welcome to the library!</h2>\n" + item.libName +", " + item.libAddress
+        response.send(mainInfo);
+    });    
 });
   
 app.post("/books", (request, response) => {
     if(!request.body) return response.sendStatus(400);
     console.log(request.body);
-    var item = new Book(request.body);
-    MainLibrary.AddBookToLibrary(item);
-    console.table(MainLibrary.listOfBooks);
-    response.sendStatus(201);
+    request.app.locals.library_collection.findOne({libName: 'Public library'}, (err, item) => {
+        if(err){
+            console.log(err);
+        }
+        let listOfBooks = item.listOfBooks;
+        listOfBooks.push(request.body);
+        request.app.locals.library_collection.updateOne({libName: 'Public library'}, {'$set': {'listOfBooks': listOfBooks}}, (err, item) => {
+            if(err)
+                console.log(err);
+        });
+        response.sendStatus(201);
+    })
 })
 
 app.get("/books", (request, response) => {
-    response.status(200).send(JSON.stringify(MainLibrary.listOfBooks));
+    request.app.locals.library_collection.findOne({libName: 'Public library'}, (err, item) => {
+        if(err){
+            console.log(err);
+        }
+        response.status(200).send(JSON.stringify(item.listOfBooks));
+
+    });
+
+    
 })
 
 app.get("/books/:bookId", (request, response) => {
@@ -36,7 +74,6 @@ app.get("/books/:bookId", (request, response) => {
             resArr.push(element)
     });
     response.status(200).send(JSON.stringify(resArr));
-    
 })
 
 app.put("/update_book", (request, response) => {

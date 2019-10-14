@@ -20,15 +20,38 @@ const book = {
 var url = "mongodb://localhost:27017";
 
 MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
-  if (err) {
-    console.error(err)
-    return
-  }
-  const db = client.db('testdb');
-  const collection = db.collection('test_collection');
+    if (err) {
+        console.error(err)
+        return
+    }
+    const db = client.db('test_library_app');
+    const collection_lib = db.collection('test_library');
+    const collection_books = db.collection('test_books_in_lib');
 
-  let test_lib = new Library("lib_name", "lib_address")
-  collection.insertOne({name: "test_lib", address: "test_address"}, () =>{
-             console.log("dobavleno");
-         })
+    let test_lib = new Library("lib_name", "lib_address");
+    test_lib.AddBookToLibrary(book);
+
+    collection_lib.insertOne(test_lib, (err, resuls) =>{
+        if(err){
+            console.log(err);
+        }
+    })
+    
+    collection_books.insertMany(test_lib.listOfBooks, (err, resuls) =>{
+        if(err){
+            console.log(err);
+        }
+    })
+    collection_books.find().toArray((err, items) => {
+        console.table(items)
+    })
+    collection_lib.insert(collection_books, (err, resuls) =>{
+        if(err){
+            console.log(err);
+        }
+    });
+    collection_lib.find().toArray((err, items) => {
+        console.log(items[0].listOfBooks);
+    })
+
 })
