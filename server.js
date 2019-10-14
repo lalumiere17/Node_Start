@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 
 app.get("/", (request, response) => {
-    var mainInfo = "<h2>Welcome to the library!</h2>\n" + MainLibrary.libName+", " + MainLibrary.libAdress
+    var mainInfo = "<h2>Welcome to the library!</h2>\n" + MainLibrary.libName+", " + MainLibrary.libAddress
     response.send(mainInfo);
 });
   

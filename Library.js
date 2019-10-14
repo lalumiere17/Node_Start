@@ -3,11 +3,11 @@ class Library{
     /**
      * 
      * @param {string} libName Название библиотеки
-     * @param {string} libAdress Адрес библиотеки
+     * @param {string} libAddress Адрес библиотеки
      */
-    constructor(libName, libAdress){
+    constructor(libName, libAddress){
         this.libName = libName;
-        this.libAdress = libAdress;
+        this.libAddress = libAddress;
         this.listOfBooks = new Array();
     }
 
@@ -33,7 +33,7 @@ class Library{
      */
     DeleteAllLibrary(){
         this.libName = null;
-        this.libAdress = null;
+        this.libAddress = null;
         this.listOfBooks = null;
     }
 }

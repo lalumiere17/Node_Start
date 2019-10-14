@@ -1,5 +1,6 @@
 const { Book } = require('./Book')
 const { Library } = require('./Library')
+const MongoClient = require("mongodb").MongoClient;
 
 console.log("Hello! i'm Node.js")
 
@@ -16,16 +17,18 @@ const book = {
     age: "16+"
 };
 
-var item = new Book(book)
+var url = "mongodb://localhost:27017";
 
-var MainLibrary = new Library("Public library", "Lenina pr. 60")
+MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  const db = client.db('testdb');
+  const collection = db.collection('test_collection');
 
-MainLibrary.AddBookToLibrary(item)
-console.table(MainLibrary.listOfBooks)
-
-
-MainLibrary.listOfBooks[0].UpdateBookInfo("name", "Мастер Кот Воланд")
-console.table(MainLibrary.listOfBooks)
-
-MainLibrary.DeleteBookFromLibrary(item)
-console.table(MainLibrary.listOfBooks)
+  let test_lib = new Library("lib_name", "lib_address")
+  collection.insertOne({name: "test_lib", address: "test_address"}, () =>{
+             console.log("dobavleno");
+         })
+})
