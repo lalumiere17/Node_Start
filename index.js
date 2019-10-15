@@ -1,6 +1,7 @@
 const { Book } = require('./Book')
 const { Library } = require('./Library')
-const MongoClient = require("mongodb").MongoClient;
+
+var amqp = require('amqplib/callback_api');
 
 console.log("Hello! i'm Node.js")
 
@@ -17,41 +18,24 @@ const book = {
     age: "16+"
 };
 
-var url = "mongodb://localhost:27017";
+amqp.connect('amqp://localhost', (err, connection) => {
+    if (err)
+        throw err;
+    connection.createChannel((err1, channel) => {
+        if (err1)
+            throw err1;
+        let queue = 'hello';
+        let msg = 'Hello world';
 
-MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
-    if (err) {
-        console.error(err)
-        return
-    }
-    const db = client.db('test_library_app');
-    const collection_lib = db.collection('test_library');
-    const collection_books = db.collection('test_books_in_lib');
+        channel.assertQueue(queue, {durable: false});
 
-    let test_lib = new Library("lib_name", "lib_address");
-    test_lib.AddBookToLibrary(book);
+        channel.sendToQueue(queue,  Buffer.from(msg));
 
-    collection_lib.insertOne(test_lib, (err, resuls) =>{
-        if(err){
-            console.log(err);
-        }
-    })
-    
-    collection_books.insertMany(test_lib.listOfBooks, (err, resuls) =>{
-        if(err){
-            console.log(err);
-        }
-    })
-    collection_books.find().toArray((err, items) => {
-        console.table(items)
-    })
-    collection_lib.insert(collection_books, (err, resuls) =>{
-        if(err){
-            console.log(err);
-        }
+        console.log(" [x] Sent %s", msg);
     });
-    collection_lib.find().toArray((err, items) => {
-        console.log(items[0].listOfBooks);
-    })
 
-})
+    setTimeout( () => {
+        connection.close();
+        process.exit(0)
+    }, 500)
+});
