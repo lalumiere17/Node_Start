@@ -3,6 +3,7 @@ const { Library } = require('./Library');
 const express = require("express");
 let bodyParser = require('body-parser');
 const MongoClient = require("mongodb").MongoClient;
+const amqp = require('amqplib/callback_api');
 
 const elem = {
     id: 0,
@@ -19,7 +20,7 @@ const elem = {
 let book = new Book(elem)
 
 let dbClient;
-var url = "mongodb://localhost:27017";
+let url = "mongodb://localhost:27017";
 
 MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
     if (err) {
@@ -28,16 +29,16 @@ MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err
     }
     dbClient = client.db('LibraryApp');
     let library_collection = dbClient.collection('library');
-    let books_collection = dbClient.collection('books_in_lib');
     
-    library_collection.insertOne(books_collection, (err, resuls) =>{
-        if(err){
-            console.log(err);
-        }
-    });
-    app.locals.library_collection = library_collection;
-    app.locals.books_collection = books_collection;
+    //Add a library into a database
+    // let MainLibrary = new Library("Public Library", "Lenina pr. 60");
 
+    // library_collection.insertOne(MainLibrary, (err, resuls) =>{
+    //     if(err){
+    //         console.log(err);
+    //     }
+    // });
+    app.locals.library_collection = library_collection;
 })
 
 const app = express();
@@ -45,22 +46,63 @@ app.use(bodyParser.json());
 
 
 app.get("/", (request, response) => {
-    request.app.locals.library_collection.findOne({libName: 'Public library'}, (err, item) =>{
-        var mainInfo = "<h2>Welcome to the library!</h2>\n" + item.libName +", " + item.libAddress
+    request.app.locals.library_collection.findOne({libName: 'Public Library'}, (err, item) =>{
+        let mainInfo = "<h2>Welcome to the library!</h2>\n" + item.libName +", " + item.libAddress
         response.send(mainInfo);
     });    
 });
+
+//принимает сообщения, но почему-то не добавляет в БД если несколько штук
+//TODO: разобраться с этим
+app.get("/books_from_queue", (request, response) => {
+    request.app.locals.library_collection.findOne({libName: 'Public Library'}, (err0, item) =>{
+        if(err0){
+            console.log(err0);
+        }
+        let new_item;
+        let new_list = item.listOfBooks;
+        console.table(new_list);
+        amqp.connect('amqp://localhost', (err1, connection) => {
+        if (err1)
+            throw err1;
+
+        connection.createChannel((err2, channel) => {
+            if (err2)
+                throw err2;
+
+            let queue = 'books';
+
+            channel.assertQueue(queue, {durable: false});
+            channel.consume(queue, (msg) => {
+                new_item = JSON.parse(msg.content);
+                console.log(" [x] Received %s", msg.content.toString());
+                console.table(new_item);
+                new_list.push(new_item);
+                console.table(new_list);
+                request.app.locals.library_collection.updateOne({libName: 'Public Library'}, {'$set': {'listOfBooks': new_list}}, (err3, item) => {
+                    if(err3)
+                        console.log(err3);
+                    console.table(item.listOfBooks);
+                });
+            }, {noAck: true});
+
+        });
+    });
+    response.sendStatus(201);
+    }); 
+    
+})
   
 app.post("/books", (request, response) => {
     if(!request.body) return response.sendStatus(400);
     console.log(request.body);
-    request.app.locals.library_collection.findOne({libName: 'Public library'}, (err, item) => {
+    request.app.locals.library_collection.findOne({libName: 'Public Library'}, (err, item) => {
         if(err){
             console.log(err);
         }
-        let listOfBooks = item.listOfBooks;
-        listOfBooks.push(request.body);
-        request.app.locals.library_collection.updateOne({libName: 'Public library'}, {'$set': {'listOfBooks': listOfBooks}}, (err, item) => {
+        let new_list = item.listOfBooks;
+        new_list.push(request.body);
+        request.app.locals.library_collection.updateOne({libName: 'Public Library'}, {'$set': {'listOfBooks': new_list}}, (err, item) => {
             if(err)
                 console.log(err);
         });
@@ -69,7 +111,7 @@ app.post("/books", (request, response) => {
 })
 
 app.get("/books", (request, response) => {
-    request.app.locals.library_collection.findOne({libName: 'Public library'}, (err, item) => {
+    request.app.locals.library_collection.findOne({libName: 'Public Library'}, (err, item) => {
         if(err){
             console.log(err);
         }
@@ -79,12 +121,12 @@ app.get("/books", (request, response) => {
 })
 
 app.get("/books/:bookId", (request, response) => {
-    request.app.locals.library_collection.findOne({libName: 'Public library'}, (err, item) => {
+    request.app.locals.library_collection.findOne({libName: 'Public Library'}, (err, item) => {
         if(err){
             console.log(err);
         }
 
-        var resArr = [];
+        let resArr = [];
         item.listOfBooks.forEach(element => {
         if (element.id === request.params["bookId"])
             resArr.push(element)
@@ -94,11 +136,12 @@ app.get("/books/:bookId", (request, response) => {
     });
 })
 
+//doesn't work now
 app.put("/update_book", (request, response) => {
     if(!request.body)
         return response.status(400).send("Please, enter all data to update the book :(");
     
-    request.app.locals.library_collection.findOne({libName: 'Public library'}, (err, item) => {
+    request.app.locals.library_collection.findOne({libName: 'Public Library'}, (err, item) => {
         if(err){
             console.log(err);
         }
@@ -112,7 +155,7 @@ app.put("/update_book", (request, response) => {
                 temp_list[index].UpdateBookInfo(request.body.fieldName, request.body.newValue);
             }
         })
-        request.app.locals.library_collection.updateOne({libName: 'Public library'}, {'$set': {'listOfBooks': temp_list}}, (err, item) => {
+        request.app.locals.library_collection.updateOne({libName: 'Public Library'}, {'$set': {'listOfBooks': temp_list}}, (err, item) => {
             if(err)
                 console.log(err);
         });
@@ -120,6 +163,7 @@ app.put("/update_book", (request, response) => {
     });     
 })
 
+//not connected to database
 app.delete("/delete_book/:bookId", (request, responce) => {
 
     MainLibrary.listOfBooks.forEach(element => {
@@ -130,6 +174,7 @@ app.delete("/delete_book/:bookId", (request, responce) => {
     responce.sendStatus(204);
 })
 
+//not connected to database
 app.delete("/delete_lib", (request, responce) => {
 
     MainLibrary.DeleteAllLibrary();

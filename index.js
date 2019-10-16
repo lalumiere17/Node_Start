@@ -24,14 +24,25 @@ amqp.connect('amqp://localhost', (err, connection) => {
     connection.createChannel((err1, channel) => {
         if (err1)
             throw err1;
-        let queue = 'hello';
-        let msg = 'Hello world';
+        let queue = 'books';
+        let msg = {
+            "id": "4",
+            "name": "Код да Винчи",
+            "author": "Д. Браун",
+            "year": "2014",
+            "publisher": "Эксмо",
+            "language": "русский",
+            "pages": "784",
+            "price": "950",
+            "genre": "роман",
+            "age": "12+"
+        };
 
         channel.assertQueue(queue, {durable: false});
 
-        channel.sendToQueue(queue,  Buffer.from(msg));
+        channel.sendToQueue(queue,  Buffer.from(JSON.stringify(msg)));
 
-        console.log(" [x] Sent %s", msg);
+        console.log(" [x] Sent %s", JSON.stringify(msg));
     });
 
     setTimeout( () => {
