@@ -26,7 +26,6 @@ function SendNewMessage(messageText, businessKey, callback){
     {
         messageName: messageText,
         businessKey: businessKey
-        //resultEnabled: true
     },
     {
         headers: {'content-type': 'application/json'}
@@ -49,7 +48,7 @@ function GetTasksOfInstance(businessKey, callback){
     });
 }
 
-function CompleteTask(businessKey){
+function completeTask(businessKey){
     GetTasksOfInstance(businessKey, (response) =>{
         taskArr = response.data;
         let id = taskArr[0].id;
@@ -63,6 +62,26 @@ function CompleteTask(businessKey){
     });
 }
 
+function CheckInstanceExist(businessKey){
+    GetInstanceId(businessKey, (response) =>{
+        if(response.data.id)
+            return true;
+    })
+
+}
+
+function GetInstanceId(businessKey, callback){
+    instance.get(`/process-instance/?businessKey=${businessKey}`)
+    .then(function (response) {
+        callback(response);
+    })
+    .catch(function (error) {
+         console.log(error.data); 
+    });
+}
+
+
+
 function DeleteInstance(businessKey){
 
 }
@@ -70,6 +89,7 @@ function DeleteInstance(businessKey){
 module.exports = {
     StartBookInstance,
     SendNewMessage,
-    CompleteTask,
+    completeTask,
+    CheckInstanceExist,
     DeleteInstance
 };

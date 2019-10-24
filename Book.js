@@ -1,31 +1,6 @@
-class Book{
-
-    /**
-     * 
-     * @param {Book} book новая книга 
-     */
-    constructor(book){
-        this.id = book.id;
-        this.name = book.name;
-        this.author = book.author;
-        this.year = book.year;
-        this.publisher = book.publisher;
-        this.language = book.language;
-        this.pages = book.pages;
-        this.price = book.price;
-        this.genre = book.genre;
-        this.age = book.age;
-    }
-
-    /**
-     * 
-     * @param {string} fieldName название поля, которое необходимо изменить
-     * @param {string} newValue новое значение поля
-     */
-    UpdateBookInfo(fieldName, newValue){
-        this[fieldName] = newValue;
-    }
-
+function UpdateBookInfo(book, fieldName, newValue){
+    book[fieldName] = newValue;
+    return book;
 }
 
-module.exports = {Book};
+module.exports = {UpdateBookInfo};
