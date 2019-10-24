@@ -1,26 +1,42 @@
-[{
-    "id": "0",
-    "name": "Мастер и Маргарита",
-    "author": "М. Булгаков",
-    "year": "2015",
-    "publisher": "Эксмо",
-    "language": "русский",
-    "pages": "352",
-    "price": "1500",
-    "genre": "роман",
-    "age": "16+"
-},
-{
-	"id": "1",
-    "name": "Гарри Поттер и философский камень",
-    "author": "Джю Роулинг",
-    "year": "2015",
-    "publisher": "Росмэн",
-    "language": "русский",
-    "pages": "348",
-    "price": "700",
-    "genre": "фэнтези",
-    "age": "6+"
+[
+    {
+        "id": "0",
+        "name": "Мастер и Маргарита",
+        "author": "М. Булгаков",
+        "year": "2015",
+        "publisher": "Эксмо",
+        "language": "русский",
+        "pages": "352",
+        "price": "1500",
+        "genre": "роман",
+        "age": "16+",
+        "instanceId": null
+    },
+    {
+        "id": "1",
+        "name": "Гарри Поттер и философский камень",
+        "author": "Джю Роулинг",
+        "year": "2015",
+        "publisher": "Росмэн",
+        "language": "русский",
+        "pages": "348",
+        "price": "700",
+        "genre": "фэнтези",
+        "age": "6+",
+        "instanceId": null
+    },
+    {
+        "id": "2",
+        "name": "Война и мир",
+        "author": "Л. Толстой",
+        "year": "2010",
+        "publisher": "Москва",
+        "language": "русский",
+        "pages": "1786",
+        "price": "1600",
+        "genre": "роман",
+        "age": "12+",
+        "instanceId": null
     },
     {
         "id": "3",
@@ -32,7 +48,8 @@
         "pages": "689",
         "price": "895",
         "genre": "роман",
-        "age": "12+"
+        "age": "12+",
+        "instanceId": null
     },
     {
         "id": "4",
@@ -44,6 +61,20 @@
         "pages": "784",
         "price": "950",
         "genre": "роман",
-        "age": "12+"
+        "age": "12+",
+        "instanceId": null
+    },
+    {
+        "id": "5",
+        "name": "Великий Гэтсби",
+        "author": "Ф. С. Фицджеральд",
+        "year": "2013",
+        "publisher": "Эксмо",
+        "language": "русский",
+        "pages": "542",
+        "price": "502",
+        "genre": "роман",
+        "age": "12+",
+        "instanceId": null
     }
 ]

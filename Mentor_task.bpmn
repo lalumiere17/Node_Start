@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0l84hw9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.4.1">
+  <bpmn:process id="MentorTask" name="Mentor task" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start process">
+      <bpmn:outgoing>SequenceFlow_1icg2n8</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:intermediateCatchEvent id="NewBookEvent_11n1h4t" name="New Book">
+      <bpmn:incoming>SequenceFlow_1icg2n8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1rrme5o</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_08gfwh4" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:userTask id="SaveBookTask_0y2oo80" name="Save book">
+      <bpmn:incoming>SequenceFlow_1rrme5o</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1r640ar</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1rrme5o" sourceRef="NewBookEvent_11n1h4t" targetRef="SaveBookTask_0y2oo80" />
+    <bpmn:sequenceFlow id="SequenceFlow_1r640ar" sourceRef="SaveBookTask_0y2oo80" targetRef="UpdateInfoEvent_04r6w59" />
+    <bpmn:intermediateCatchEvent id="UpdateInfoEvent_04r6w59" name="Update book">
+      <bpmn:incoming>SequenceFlow_1r640ar</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0vj6mcb</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_0m559wk" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1icg2n8" sourceRef="StartEvent_1" targetRef="NewBookEvent_11n1h4t" />
+    <bpmn:sequenceFlow id="SequenceFlow_0vj6mcb" sourceRef="UpdateInfoEvent_04r6w59" targetRef="UpdatingTask_1vs79rp" />
+    <bpmn:userTask id="UpdatingTask_1vs79rp" name="Updating book">
+      <bpmn:incoming>SequenceFlow_0vj6mcb</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1r5xub8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateCatchEvent id="DeleteBookEvent_0vn2o23" name="Delete book">
+      <bpmn:incoming>SequenceFlow_1r5xub8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1glsn4g</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_0jyqe0h" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1r5xub8" sourceRef="UpdatingTask_1vs79rp" targetRef="DeleteBookEvent_0vn2o23" />
+    <bpmn:userTask id="DeleteBookTask_02oc8jm" name="Delete book">
+      <bpmn:incoming>SequenceFlow_1glsn4g</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0sdey5d</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1glsn4g" sourceRef="DeleteBookEvent_0vn2o23" targetRef="DeleteBookTask_02oc8jm" />
+    <bpmn:endEvent id="EndEvent_1khefo4" name="End process">
+      <bpmn:incoming>SequenceFlow_0sdey5d</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0sdey5d" sourceRef="DeleteBookTask_02oc8jm" targetRef="EndEvent_1khefo4" />
+  </bpmn:process>
+  <bpmn:message id="Message_08gfwh4" name="NewBook" />
+  <bpmn:message id="Message_0m559wk" name="UpdateBook" />
+  <bpmn:message id="Message_0jyqe0h" name="DeleteBook" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="MentorTask">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="172" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="145" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_0wlrq4y_di" bpmnElement="NewBookEvent_11n1h4t">
+        <dc:Bounds x="272" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="265" y="145" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0kjshh3_di" bpmnElement="SaveBookTask_0y2oo80">
+        <dc:Bounds x="360" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1rrme5o_di" bpmnElement="SequenceFlow_1rrme5o">
+        <di:waypoint x="308" y="120" />
+        <di:waypoint x="360" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1r640ar_di" bpmnElement="SequenceFlow_1r640ar">
+        <di:waypoint x="460" y="120" />
+        <di:waypoint x="522" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_1v17qrg_di" bpmnElement="UpdateInfoEvent_04r6w59">
+        <dc:Bounds x="522" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="511" y="145" width="63" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1icg2n8_di" bpmnElement="SequenceFlow_1icg2n8">
+        <di:waypoint x="208" y="120" />
+        <di:waypoint x="272" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0vj6mcb_di" bpmnElement="SequenceFlow_0vj6mcb">
+        <di:waypoint x="558" y="120" />
+        <di:waypoint x="620" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1fmxsc6_di" bpmnElement="UpdatingTask_1vs79rp">
+        <dc:Bounds x="620" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_1cp9r9i_di" bpmnElement="DeleteBookEvent_0vn2o23">
+        <dc:Bounds x="772" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="761" y="145" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1r5xub8_di" bpmnElement="SequenceFlow_1r5xub8">
+        <di:waypoint x="720" y="120" />
+        <di:waypoint x="772" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_09uwllz_di" bpmnElement="DeleteBookTask_02oc8jm">
+        <dc:Bounds x="880" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1glsn4g_di" bpmnElement="SequenceFlow_1glsn4g">
+        <di:waypoint x="808" y="120" />
+        <di:waypoint x="880" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1khefo4_di" bpmnElement="EndEvent_1khefo4">
+        <dc:Bounds x="1042" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1030" y="145" width="62" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0sdey5d_di" bpmnElement="SequenceFlow_0sdey5d">
+        <di:waypoint x="980" y="120" />
+        <di:waypoint x="1042" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
